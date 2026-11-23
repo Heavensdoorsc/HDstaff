@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>HD Admin | Sistema Privado Heaven’s Doors</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- FONDO CELESTIAL SUTIL -->
+  <div class="celestial-bg" aria-hidden="true">
+    <div class="star-layer"></div>
+    <div class="cloud-glow cloud-1"></div>
+    <div class="cloud-glow cloud-2"></div>
+  </div>
+
+  <!-- VISTA 1: INICIO DE SESIÓN PRIVADO -->
+  <section id="login-screen" class="login-wrapper">
+    <div class="login-card glass-panel">
+      <div class="hd-emblem">
+        <!-- SVG Alas y Estrella Minimalista -->
+        <svg viewBox="0 0 120 48" class="wings-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M52 26C38 24 22 16 8 6C14 18 24 25 36 28C24 29 15 27 8 23C16 32 30 35 46 33" stroke="url(#silverGrad)" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M68 26C82 24 98 16 112 6C106 18 96 25 84 28C96 29 105 27 112 23C104 32 90 35 74 33" stroke="url(#silverGrad)" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M60 10L62.5 21.5L74 24L62.5 26.5L60 38L57.5 26.5L46 24L57.5 21.5L60 10Z" fill="url(#skyGrad)"/>
+          <defs>
+            <linearGradient id="silverGrad" x1="8" y1="6" x2="112" y2="35" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#E2E8F0"/>
+              <stop offset="0.5" stop-color="#7DD3FC"/>
+              <stop stop-color="#E2E8F0"/>
+            </linearGradient>
+            <linearGradient id="skyGrad" x1="60" y1="10" x2="60" y2="38" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FFFFFF"/>
+              <stop offset="1" stop-color="#7DD3FC"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h1 class="brand-title">HEAVEN’S DOORS</h1>
+      <p class="brand-subtitle">Sistema Privado de Administración</p>
+
+      <form id="login-form" class="form-stack">
+        <div class="input-group">
+          <label for="login-user">Usuario de Administrador</label>
+          <input type="text" id="login-user" placeholder="Ej. alexa_hd" autocomplete="username" required />
+        </div>
+        <div class="input-group">
+          <label for="login-pass">Contraseña</label>
+          <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Iniciar Sesión ✦</button>
+        <p id="login-error" class="error-msg hidden"></p>
+      </form>
+      <p class="login-footnote">Acceso exclusivo para personal autorizado de HD.</p>
+    </div>
+  </section>
+
+  <!-- VISTA 2: APLICACIÓN PRINCIPAL -->
+  <div id="app-shell" class="app-container hidden">
+    <!-- BARRA SUPERIOR MÓVIL / DESKTOP -->
+    <header class="topbar glass-panel">
+      <div class="topbar-left">
+        <button id="menu-toggle" class="icon-btn mobile-only" aria-label="Menú">☰</button>
+        <div class="brand-compact">
+          <span class="star-icon">✦</span>
+          <div>
+            <strong>HEAVEN’S DOORS</strong>
+            <small id="week-indicator">Semana Activa</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="user-badge">
+          <span id="current-user-name">Usuario</span>
+          <span id="current-user-role" class="role-pill">ADMIN</span>
+        </div>
+        <button id="logout-btn" class="btn btn-ghost btn-sm">Salir</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <!-- MENÚ LATERAL -->
+      <aside id="sidebar" class="sidebar glass-panel">
+        <nav class="nav-list">
+          <button class="nav-item active" data-tab="dashboard">✦ Panel Principal</button>
+          <button class="nav-item" data-tab="schedule">📅 Horario Semanal</button>
+          <button class="nav-item" data-tab="participation">📝 Registrar Actividad</button>
+          <button class="nav-item founder-only" data-tab="approvals">
+            ⚖️ Aprobaciones <span id="pending-badge" class="badge hidden">0</span>
+          </button>
+          <button class="nav-item" data-tab="points">🏆 Tabla General de Puntos</button>
+          <button class="nav-item" data-tab="members">🪪 Fichas de Integrantes</button>
+          <button class="nav-item" data-tab="inactivity">🌙 Inactividades</button>
+          <button class="nav-item" data-tab="monthly">👑 Clasificación Mensual</button>
+          <button class="nav-item" data-tab="history">📜 Historial</button>
+          <button class="nav-item founder-only" data-tab="staff">🔐 Gestión de Admins</button>
+        </nav>
+      </aside>
+
+      <!-- CONTENIDO DINÁMICO -->
+      <main class="main-content">
+
+        <!-- 12. PANEL PRINCIPAL -->
+        <section id="tab-dashboard" class="tab-view active">
+          <div class="section-header">
+            <h2>Panel Principal</h2>
+            <p id="dashboard-welcome" class="muted">Resumen operativo de Heaven’s Doors</p>
+          </div>
+
+          <div id="dashboard-stats" class="stats-grid"></div>
+
+          <div class="dashboard-columns">
+            <div class="card glass-panel">
+              <h3>✦ Próximos Horarios de la Semana</h3>
+              <div id="dash-upcoming-schedules" class="list-stack"></div>
+            </div>
+
+            <div class="card glass-panel">
+              <h3 id="dash-secondary-title">✦ Estado Reciente</h3>
+              <div id="dash-secondary-list" class="list-stack"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. HORARIO SEMANAL -->
+        <section id="tab-schedule" class="tab-view">
+          <div class="section-header row-between">
+            <div>
+              <h2>Horario Semanal</h2>
+              <p class="muted">Programación oficial de actividades del clan</p>
+            </div>
+            <div class="btn-group founder-only">
+              <button id="btn-open-slot-modal" class="btn btn-primary btn-sm">+ Agregar Horario</button>
+              <button id="btn-new-week" class="btn btn-secondary btn-sm">Nueva Semana (Archivar)</button>
+            </div>
+          </div>
+
+          <!-- Formulario rápido Founder para crear/editar horario -->
+          <div id="slot-editor-card" class="card glass-panel founder-only hidden">
+            <h3 id="slot-form-title">Nuevo Espacio en Horario</h3>
+            <form id="slot-form" class="grid-form">
+              <input type="hidden" id="slot-id" />
+              <div class="input-group">
+                <label>Día de la semana</label>
+                <select id="slot-day" required>
+                  <option value="Lunes">Lunes</option>
+                  <option value="Martes">Martes</option>
+                  <option value="Miércoles">Miércoles</option>
+                  <option value="Jueves">Jueves</option>
+                  <option value="Viernes">Viernes</option>
+                  <option value="Sábado">Sábado</option>
+                  <option value="Domingo">Domingo</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <label>Hora (Ej. 17:00 - 18:00)</label>
+                <input type="text" id="slot-time" placeholder="5:00 PM" required />
+              </div>
+              <div class="input-group">
+                <label>Actividad</label>
+                <input type="text" id="slot-activity" placeholder="Ej. MM2 / Speed Draw" required />
+              </div>
+              <div class="input-group">
+                <label>Admin Asignado (Opcional)</label>
+                <input type="text" id="slot-admin" placeholder="Dejar vacío para Disponible" />
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-sm">Guardar Horario</button>
+                <button type="button" id="btn-cancel-slot" class="btn btn-ghost btn-sm">Cancelar</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card glass-panel table-responsive">
+            <table class="hd-table">
+              <thead>
+                <tr>
+                  <th>Día</th>
+                  <th>Hora</th>
+                  <th>Actividad</th>
+                  <th>Administrador Encargado</th>
+                  <th>Estado</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="schedule-tbody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 8, 4, 6. TABLA DE REGISTRO DE PARTICIPACIÓN Y EVIDENCIAS -->
+        <section id="tab-participation" class="tab-view">
+          <div class="section-header">
+            <h2>Registro de Participación</h2>
+            <p class="muted">Completa la ficha de actividad para enviarla a revisión de Founder</p>
+          </div>
+
+          <div class="two-col-layout">
+            <form id="activity-form" class="card glass-panel form-stack">
+              <div class="grid-2">
+                <div class="input-group">
+                  <label>Actividad</label>
+                  <input type="text" id="act-name" placeholder="Ej. Speed Draw / MM2" required />
+                </div>
+                <div class="input-group">
+                  <label>Juego o Plataforma</label>
+                  <input type="text" id="act-platform" placeholder="Roblox / Discord / WhatsApp" required />
+                </div>
+              </div>
+
+              <div class="grid-2">
+                <div class="input-group">
+                  <label>Fecha y Hora</label>
+                  <input type="datetime-local" id="act-datetime" required />
+                </div>
+                <div class="input-group">
+                  <label>Puntos por participante</label>
+                  <input type="number" id="act-points" value="15" min="1" required />
+                </div>
+              </div>
+
+              <!-- Buscador inteligente por ficha única -->
+              <div class="input-group">
+                <label>Buscar e identificar integrantes (Roblox, WhatsApp, Discord o Apodo)</label>
+                <input type="text" id="member-search-input" placeholder="Escribe nombre, @usuario o ID para agregar..." autocomplete="off" />
+                <div id="member-search-results" class="autocomplete-list hidden"></div>
+              </div>
+
+              <!-- Lista de participantes seleccionados -->
+              <div class="input-group">
+                <label>Participantes seleccionados (<span id="selected-count">0</span>)</label>
+                <div id="selected-participants-list" class="chips-container"></div>
+              </div>
+
+              <div class="input-group">
+                <label>Observaciones</label>
+                <textarea id="act-notes" rows="2" placeholder="Detalles adicionales de la actividad..."></textarea>
+              </div>
+
+              <!-- 6. EVIDENCIAS -->
+              <div class="input-group">
+                <label>Evidencias (Capturas de pantalla - Obligatorio)</label>
+                <input type="file" id="act-evidences" accept="image/*" multiple />
+                <div id="evidence-preview-grid" class="evidence-grid"></div>
+              </div>
+
+              <button type="submit" id="btn-submit-activity" class="btn btn-primary btn-full">
+                Enviar Registro a Revisión ✦
+              </button>
+            </form>
+
+            <!-- VISTA PREVIA EN TIEMPO REAL DE LA FICHA DE ADMINISTRADORES -->
+            <div class="card glass-panel">
+              <div class="row-between">
+                <h3>Vista Previa — Ficha HD</h3>
+                <button type="button" id="btn-copy-admin-sheet" class="btn btn-secondary btn-sm">Copiar Ficha</button>
+              </div>
+              <pre id="admin-sheet-preview" class="whatsapp-preview"></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 9. APROBACIÓN DE PUNTOS (SOLO FOUNDER) -->
+        <section id="tab-approvals" class="tab-view founder-only">
+          <div class="section-header">
+            <h2>Aprobación de Puntos</h2>
+            <p class="muted">Revisa evidencias y autoriza los puntos antes de sumarlos a la tabla general</p>
+          </div>
+          <div id="approvals-list" class="cards-stack"></div>
+        </section>
+
+        <!-- 7. TABLA GENERAL DE PUNTOS Y EXPORTACIÓN WHATSAPP -->
+        <section id="tab-points" class="tab-view">
+          <div class="section-header row-between">
+            <div>
+              <h2>Tabla General de Puntos</h2>
+              <p class="muted">Clasificación oficial acumulada y reporte listo para WhatsApp</p>
+            </div>
+            <button id="btn-generate-wa" class="btn btn-primary btn-sm">Generar Texto WhatsApp ✦</button>
+          </div>
+
+          <div class="two-col-layout">
+            <div class="card glass-panel table-responsive">
+              <table class="hd-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Integrante (Ficha Única)</th>
+                    <th>Anterior</th>
+                    <th>Semana</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="points-tbody"></tbody>
+              </table>
+            </div>
+
+            <div class="card glass-panel">
+              <div class="row-between">
+                <h3>Formato WhatsApp HD</h3>
+                <button id="btn-copy-wa" class="btn btn-secondary btn-sm">Copiar Texto</button>
+              </div>
+              <div class="input-group" style="margin-top:10px;">
+                <label>Texto de resumen (Editable antes de copiar)</label>
+                <input type="text" id="wa-summary-activities" placeholder="Ej. Speed Draw y MM2" value="las actividades de la semana" />
+              </div>
+              <pre id="whatsapp-output" class="whatsapp-preview"></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. IDENTIFICACIÓN DE INTEGRANTES -->
+        <section id="tab-members" class="tab-view">
+          <div class="section-header row-between">
+            <div>
+              <h2>Fichas de Integrantes</h2>
+              <p class="muted">Unifica Roblox, WhatsApp y Discord en un solo perfil para evitar duplicados</p>
+            </div>
+            <button id="btn-toggle-member-form" class="btn btn-primary btn-sm">+ Nueva Ficha</button>
+          </div>
+
+          <div id="member-form-card" class="card glass-panel hidden">
+            <h3 id="member-form-title">Registrar Ficha de Integrante</h3>
+            <form id="member-form" class="grid-form">
+              <input type="hidden" id="mem-doc-id" />
+              <div class="input-group">
+                <label>Nombre o Apodo Principal *</label>
+                <input type="text" id="mem-alias" placeholder="Ej. Dino" required />
+              </div>
+              <div class="input-group">
+                <label>Usuario de Roblox *</label>
+                <input type="text" id="mem-roblox" placeholder="Ej. dinojoshep" required />
+              </div>
+              <div class="input-group">
+                <label>Nombre / @ en WhatsApp</label>
+                <input type="text" id="mem-whatsapp" placeholder="Ej. Dino HD" />
+              </div>
+              <div class="input-group">
+                <label>Usuario de Discord</label>
+                <input type="text" id="mem-discord" placeholder="Ej. dinojoshep#0001" />
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-sm">Guardar Ficha</button>
+                <button type="button" id="btn-cancel-member" class="btn btn-ghost btn-sm">Cancelar</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card glass-panel">
+            <input type="text" id="filter-members-input" placeholder="Filtrar por ID, nombre, Roblox, WhatsApp o Discord..." class="search-bar" />
+            <div class="table-responsive" style="margin-top: 12px;">
+              <table class="hd-table">
+                <thead>
+                  <tr>
+                    <th>ID Único</th>
+                    <th>Apodo</th>
+                    <th>Roblox</th>
+                    <th>WhatsApp</th>
+                    <th>Discord</th>
+                    <th>Puntos</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="members-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. REGISTRO DE INACTIVIDAD -->
+        <section id="tab-inactivity" class="tab-view">
+          <div class="section-header">
+            <h2>Registro de Inactividad</h2>
+            <p class="muted">Notificación de ausencias parciales o totales del equipo administrativo</p>
+          </div>
+
+          <div class="two-col-layout">
+            <form id="inactivity-form" class="card glass-panel form-stack">
+              <h3>Nueva Solicitud de Inactividad</h3>
+              <div class="grid-2">
+                <div class="input-group">
+                  <label>Fecha de inicio</label>
+                  <input type="date" id="inact-start" required />
+                </div>
+                <div class="input-group">
+                  <label>Fecha de finalización</label>
+                  <input type="date" id="inact-end" required />
+                </div>
+              </div>
+              <div class="grid-2">
+                <div class="input-group">
+                  <label>Cantidad de días</label>
+                  <input type="number" id="inact-days" readonly placeholder="Automático" />
+                </div>
+                <div class="input-group">
+                  <label>Tipo de inactividad</label>
+                  <select id="inact-type" required>
+                    <option value="Parcial">Parcial (Algunos horarios)</option>
+                    <option value="Total">Total (Ausencia completa)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="input-group">
+                <label>Motivo de la inactividad</label>
+                <input type="text" id="inact-reason" placeholder="Ej. Exámenes escolares / Viaje" required />
+              </div>
+              <div class="input-group">
+                <label>Horarios o actividades que no podrá realizar</label>
+                <input type="text" id="inact-affected" placeholder="Ej. Turno de la tarde lunes y miércoles" required />
+              </div>
+              <div class="input-group">
+                <label>Observaciones adicionales</label>
+                <textarea id="inact-notes" rows="2"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-full">Enviar Solicitud</button>
+            </form>
+
+            <div class="card glass-panel">
+              <h3>Solicitudes Registradas</h3>
+              <div id="inactivity-list" class="cards-stack"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10. CLASIFICACIÓN MENSUAL -->
+        <section id="tab-monthly" class="tab-view">
+          <div class="section-header row-between">
+            <div>
+              <h2>Clasificación Mensual y Cierre</h2>
+              <p class="muted">Podio de los 3 primeros lugares (premios Robux) y archivo mensual</p>
+            </div>
+            <button id="btn-close-month" class="btn btn-primary btn-sm founder-only">Cerrar Mes y Reiniciar Puntos</button>
+          </div>
+
+          <div id="podium-container" class="podium-grid"></div>
+
+          <div class="card glass-panel" style="margin-top: 20px;">
+            <h3>Historial de Cierres Mensuales</h3>
+            <div id="monthly-archives-list" class="cards-stack"></div>
+          </div>
+        </section>
+
+        <!-- 11. HISTORIAL GENERAL -->
+        <section id="tab-history" class="tab-view">
+          <div class="section-header row-between">
+            <div>
+              <h2>Historial y Auditoría</h2>
+              <p class="muted">Registro permanente de actividades, evidencias, aprobaciones y cambios</p>
+            </div>
+            <select id="history-filter" class="filter-select">
+              <option value="ALL">Todos los registros</option>
+              <option value="APROBADA">Actividades Aprobadas</option>
+              <option value="RECHAZADA">Actividades Rechazadas</option>
+              <option value="LOG">Cambios del Sistema</option>
+            </select>
+          </div>
+          <div id="history-list" class="cards-stack"></div>
+        </section>
+
+        <!-- 1. GESTIÓN DE CUENTAS ADMIN (SOLO FOUNDER) -->
+        <section id="tab-staff" class="tab-view founder-only">
+          <div class="section-header">
+            <h2>Cuentas de Administradores</h2>
+            <p class="muted">Crea credenciales individuales para cada administrador sin registro público</p>
+          </div>
+
+          <div class="two-col-layout">
+            <form id="create-admin-form" class="card glass-panel form-stack">
+              <h3>Crear Nueva Cuenta de Admin</h3>
+              <div class="input-group">
+                <label>Nombre Visible en el Clan</label>
+                <input type="text" id="new-admin-display" placeholder="Ej. Eli / Santi / Natasha" required />
+              </div>
+              <div class="input-group">
+                <label>Usuario de Acceso (Sin espacios)</label>
+                <input type="text" id="new-admin-user" placeholder="Ej. eli_hd" required />
+              </div>
+              <div class="input-group">
+                <label>Contraseña Única (Mín. 6 caracteres)</label>
+                <input type="text" id="new-admin-pass" placeholder="Ej. HD2026#Eli" minlength="6" required />
+              </div>
+              <button type="submit" class="btn btn-primary btn-full">Generar Credenciales</button>
+              <small class="muted">Nota: Comparte estas credenciales en privado con tu administrador.</small>
+            </form>
+
+            <div class="card glass-panel">
+              <h3>Personal Registrado</h3>
+              <div id="staff-list" class="list-stack"></div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL PARA VER EVIDENCIAS EN GRANDE -->
+  <div id="image-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box glass-panel">
+      <button id="close-image-modal" class="btn btn-ghost btn-sm close-modal">✕ Cerrar</button>
+      <img id="modal-img-target" src="" alt="Evidencia HD" />
+    </div>
+  </div>
+
+  <!-- FIREBASE SDKs (v10 Modular vía CDN) -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
